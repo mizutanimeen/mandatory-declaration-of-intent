@@ -37,3 +37,33 @@ func jsonToUser(aRequest *http.Request) (*models.User, int, error) {
 
 	return tUser, 0, nil
 }
+
+func ParseRequestGestUser(aRequest *http.Request) (*models.GestUser, int, error) {
+	var tGestUser *models.GestUser
+	switch aRequest.Header["Content-Type"][0] {
+	case "application/json":
+		var tStatus int
+		var tError error
+		tGestUser, tStatus, tError = jsonToGestUser(aRequest)
+		if tError != nil {
+			return nil, tStatus, tError
+		}
+	default:
+		return nil, http.StatusPreconditionFailed, fmt.Errorf("%s is bad content-type", aRequest.Header["Content-Type"][0])
+	}
+
+	return tGestUser, 0, nil
+}
+
+// bodyがjsonのrequestからstruct userを作る
+func jsonToGestUser(aRequest *http.Request) (*models.GestUser, int, error) {
+	tBody := make([]byte, aRequest.ContentLength)
+	aRequest.Body.Read(tBody)
+
+	tGestUser := &models.GestUser{}
+	if tError := json.Unmarshal(tBody, tGestUser); tError != nil {
+		return nil, http.StatusInternalServerError, tError
+	}
+
+	return tGestUser, 0, nil
+}

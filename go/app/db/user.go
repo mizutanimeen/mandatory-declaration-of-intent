@@ -39,3 +39,22 @@ func CreateUser(aUser *models.User, aDb *sql.DB) (int, error) {
 
 	return 0, nil
 }
+
+func CreateGestUser(aGestUser *models.GestUser, aDb *sql.DB) (int, error) {
+	tColumns := fmt.Sprintf("(%s,%s,%s)",
+		os.Getenv("MYSQL_GEST_USERS_TABLE_NAME"), os.Getenv("MYSQL_GEST_USERS_TABLE_TEXT"), os.Getenv("MYSQL_ROOMS_TABLE_ID"))
+	tQuery := fmt.Sprintf("INSERT INTO %s %s VALUES (?,?,?)",
+		os.Getenv("MYSQL_GEST_USERS_TABLE"), tColumns)
+
+	tStmt, tError := aDb.Prepare(tQuery)
+	if tError != nil {
+		return http.StatusInternalServerError, tError
+	}
+	defer tStmt.Close()
+
+	if _, tError := tStmt.Exec(aGestUser.Name, aGestUser.Text, aGestUser.RoomID); tError != nil {
+		return http.StatusInternalServerError, tError
+	}
+
+	return 0, nil
+}

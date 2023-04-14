@@ -116,3 +116,50 @@ func (aServer *Server) CreateUser(aResponseWriter http.ResponseWriter, aRequest 
 	aResponseWriter.WriteHeader(http.StatusCreated)
 	return
 }
+func (aServer *Server) GetAllGestMembers(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
+	tID := chi.URLParam(aRequest, "ID")
+
+	tGestUsers, tStatus, tError := db.GetAllGestMembers(tID, aServer.Db)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+
+	tUserByte, tError := json.Marshal(tGestUsers)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	aResponseWriter.Header().Set("Content-Type", "application/json")
+	aResponseWriter.WriteHeader(200)
+	if _, tError := aResponseWriter.Write(tUserByte); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	return
+}
+func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
+	tGestUser, tStatus, tError := controllers.ParseRequestGestUser(aRequest)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+
+	//リクエストの中身が要件を満たしているか確認
+
+	//データベースに保存
+	//データが存在していたときの例外処理、react側が欲しいなら渡すように
+	if tStatus, tError := db.CreateGestUser(tGestUser, aServer.Db); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+	aResponseWriter.WriteHeader(http.StatusCreated)
+	return
+}

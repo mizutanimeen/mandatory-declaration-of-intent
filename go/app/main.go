@@ -58,6 +58,9 @@ func main() {
 		tRouter.Post("/users", tServer.CreateUser)
 		tRouter.Get("/rooms/{ID}", tServer.GetRoomByID)
 		tRouter.Post("/rooms", tServer.CreateRoom)
+		tRouter.Get("/rooms/{ID}/members/gest", tServer.GetAllGestMembers)
+		// tRouter.Post("/rooms/members/user", tServer.JoinUserMember)
+		tRouter.Post("/rooms/members/gest", tServer.CreateGestMember)
 	})
 
 	log.Println("--------------Server Start--------------")
