@@ -1,0 +1,37 @@
+version: "3.8"
+services:
+  go:
+    build: ./go
+    container_name: mandatory-declaration-of-intent-go
+    restart: always
+    env_file: 
+      - dev.env
+    tty: true
+    volumes:
+      - ./go/app/logs/data:/go/app/logs/data:rw
+    depends_on:
+      - db
+    ports:
+      - 8123:8080
+  react:
+    build: ./react
+    container_name: mandatory-declaration-of-intent-react
+    tty: true
+    env_file: 
+      - dev.env
+    volumes:
+      - ./react/app:/react/app
+    ports:
+      - 3000:3000
+  db:
+    build: ./db
+    container_name: mandatory-declaration-of-intent-db
+    tty: true
+    env_file: 
+      - dev.env
+    volumes:
+      - ./db/data:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d 
+    ports:
+      - 3306:3306
+
