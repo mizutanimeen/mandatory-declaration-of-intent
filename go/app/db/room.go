@@ -10,6 +10,17 @@ import (
 	"github.com/mizutanimeen/mandatory-declaration-of-intent/models"
 )
 
+func GetRoomByID(aID string, aDb *sql.DB) (*models.Room, int, error) {
+	tWhere := fmt.Sprintf("WHERE %s = %s", os.Getenv("MYSQL_ROOMS_TABLE_ID"), aID)
+	tQuery := fmt.Sprintf("SELECT * FROM %s %s", os.Getenv("MYSQL_ROOMS_TABLE"), tWhere)
+
+	tRoom := models.Room{}
+	if tError := aDb.QueryRow(tQuery).Scan(&tRoom.RoomID, &tRoom.Name, &tRoom.Description, &tRoom.CreateAt, &tRoom.UpdateAt); tError != nil {
+		return nil, http.StatusInternalServerError, tError
+	}
+	return &tRoom, 0, nil
+}
+
 func CreateRoom(aRoom *models.Room, aDb *sql.DB) (int, error) {
 	tColumns := fmt.Sprintf("(%s,%s)",
 		os.Getenv("MYSQL_ROOMS_TABLE_NAME"), os.Getenv("MYSQL_ROOMS_TABLE_DESCRIPTION"))
@@ -27,15 +38,4 @@ func CreateRoom(aRoom *models.Room, aDb *sql.DB) (int, error) {
 	}
 
 	return 0, nil
-}
-
-func GetRoomByID(aID string, aDb *sql.DB) (*models.Room, int, error) {
-	tWhere := fmt.Sprintf("WHERE %s = %s", os.Getenv("MYSQL_ROOMS_TABLE_ID"), aID)
-	tQuery := fmt.Sprintf("SELECT * FROM %s %s", os.Getenv("MYSQL_ROOMS_TABLE"), tWhere)
-
-	tRoom := models.Room{}
-	if tError := aDb.QueryRow(tQuery).Scan(&tRoom.RoomID, &tRoom.Name, &tRoom.Description, &tRoom.CreateAt, &tRoom.UpdateAt); tError != nil {
-		return nil, http.StatusInternalServerError, tError
-	}
-	return &tRoom, 0, nil
 }

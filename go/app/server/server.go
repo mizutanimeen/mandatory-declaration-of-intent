@@ -23,27 +23,6 @@ func New(aDb *sql.DB) *Server {
 	}
 }
 
-func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
-	tRoom, tStatus, tError := controllers.ParseRequestRoom(aRequest)
-	if tError != nil {
-		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), tStatus)
-		return
-	}
-
-	//リクエストの中身が要件を満たしているか確認
-
-	//データベースに保存
-	//データが存在していたときの例外処理、react側が欲しいなら渡すように
-	if tStatus, tError := db.CreateRoom(tRoom, aServer.Db); tError != nil {
-		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), tStatus)
-		return
-	}
-	aResponseWriter.WriteHeader(http.StatusCreated)
-	return
-}
-
 func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tID := chi.URLParam(aRequest, "ID")
 
@@ -72,6 +51,27 @@ func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest
 	return
 }
 
+func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
+	tRoom, tStatus, tError := controllers.ParseRequestRoom(aRequest)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+
+	//リクエストの中身が要件を満たしているか確認
+
+	//データベースに保存
+	//データが存在していたときの例外処理、react側が欲しいなら渡すように
+	if tStatus, tError := db.CreateRoom(tRoom, aServer.Db); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+	aResponseWriter.WriteHeader(http.StatusCreated)
+	return
+}
+
 func (aServer *Server) GetUserByID(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tID := chi.URLParam(aRequest, "ID")
 
@@ -93,5 +93,26 @@ func (aServer *Server) GetUserByID(aResponseWriter http.ResponseWriter, aRequest
 		return
 	}
 
+	return
+}
+
+func (aServer *Server) CreateUser(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
+	tUser, tStatus, tError := controllers.ParseRequestUser(aRequest)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+
+	//リクエストの中身が要件を満たしているか確認
+
+	//データベースに保存
+	//データが存在していたときの例外処理、react側が欲しいなら渡すように
+	if tStatus, tError := db.CreateUser(tUser, aServer.Db); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+	aResponseWriter.WriteHeader(http.StatusCreated)
 	return
 }

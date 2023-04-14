@@ -55,6 +55,7 @@ func main() {
 	tRouter.Use(middleware.Logger)
 	tRouter.Route("/mandatory-declaration-of-intent/api/v1", func(tRouter chi.Router) {
 		tRouter.Get("/users/{ID}", tServer.GetUserByID)
+		tRouter.Post("/users", tServer.CreateUser)
 		tRouter.Get("/rooms/{ID}", tServer.GetRoomByID)
 		tRouter.Post("/rooms", tServer.CreateRoom)
 	})
