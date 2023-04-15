@@ -19,3 +19,5 @@
 ### メモ
 
 https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
+
+部屋ごとに識別子を作って、ゲストユーザーに送ってクッキーに保存

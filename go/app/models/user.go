@@ -16,7 +16,7 @@ type GestUser struct {
 	GestUserID int       `json:"gest_userid"`
 	Name       string    `json:"name"`
 	Text       string    `json:"text"`
-	RoomID     int       `json:"roomid"`
+	RoomID     string    `json:"roomid"`
 	CreateAt   time.Time `json:"create_at"`
 	UpdateAt   time.Time `json:"update_at"`
 }
