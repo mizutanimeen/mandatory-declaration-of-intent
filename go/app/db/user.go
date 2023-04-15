@@ -11,11 +11,11 @@ import (
 )
 
 func GetUserByID(aID string, aDb *sql.DB) (*models.User, int, error) {
-	tWhere := fmt.Sprintf("WHERE %s = %s", os.Getenv("MYSQL_USERS_TABLE_ID"), aID)
+	tWhere := fmt.Sprintf("WHERE %s = ?", os.Getenv("MYSQL_USERS_TABLE_ID"))
 	tQuery := fmt.Sprintf("SELECT * FROM %s %s", os.Getenv("MYSQL_USERS_TABLE"), tWhere)
 
 	tUser := models.User{}
-	if tError := aDb.QueryRow(tQuery).Scan(&tUser.UserID, &tUser.Name, &tUser.Text, &tUser.CreateAt, &tUser.UpdateAt); tError != nil {
+	if tError := aDb.QueryRow(tQuery, aID).Scan(&tUser.UserID, &tUser.Name, &tUser.Text, &tUser.CreateAt, &tUser.UpdateAt); tError != nil {
 		return nil, http.StatusInternalServerError, tError
 	}
 	return &tUser, 0, nil
