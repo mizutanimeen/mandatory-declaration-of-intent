@@ -51,7 +51,6 @@ func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest
 
 	return
 }
-
 func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tRoom, tStatus, tError := controllers.ParseRequestRoom(aRequest)
 	if tError != nil {
@@ -79,7 +78,6 @@ func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest 
 	}
 	return
 }
-
 func (aServer *Server) GetUserByID(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tID := chi.URLParam(aRequest, "ID")
 
@@ -103,7 +101,6 @@ func (aServer *Server) GetUserByID(aResponseWriter http.ResponseWriter, aRequest
 
 	return
 }
-
 func (aServer *Server) CreateUser(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tUser, tStatus, tError := controllers.ParseRequestUser(aRequest)
 	if tError != nil {
@@ -127,18 +124,19 @@ func (aServer *Server) CreateUser(aResponseWriter http.ResponseWriter, aRequest 
 func (aServer *Server) GetAllGestMembers(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tID := chi.URLParam(aRequest, "ID")
 
-	// クッキーチェック
-	tCookie, err := aRequest.Cookie("mycookie")
+	tCookie, err := aRequest.Cookie(fmt.Sprintf("mandatory-declaration-of-intent-room-%s", tID))
 	if err != nil {
 		http.Error(aResponseWriter, "Access denied:cookie none", http.StatusForbidden)
 		return
 	}
 
-	if tCookie.Value != "Hello, World!" {
+	if tRoom, tStatus, tError := db.GetRoomByID(tID, aServer.Db); tError != nil {
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	} else if tCookie.Value != tRoom.CookieValue {
 		http.Error(aResponseWriter, fmt.Sprintf("Access denied: your cookie is %s", tCookie.Value), http.StatusForbidden)
 		return
 	}
-	// クッキーチェック終わり
 
 	tGestUsers, tStatus, tError := db.GetAllGestMembers(tID, aServer.Db)
 	if tError != nil {
@@ -187,6 +185,7 @@ func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRe
 	tCookie := &http.Cookie{
 		Name:  tRoom.CookieName,
 		Value: tRoom.CookieValue,
+		Path:  "/",
 	}
 	http.SetCookie(aResponseWriter, tCookie)
 	aResponseWriter.WriteHeader(http.StatusCreated)

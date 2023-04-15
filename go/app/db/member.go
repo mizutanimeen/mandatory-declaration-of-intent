@@ -11,10 +11,10 @@ import (
 )
 
 func GetAllGestMembers(aID string, aDb *sql.DB) ([]*models.GestUser, int, error) {
-	tWhere := fmt.Sprintf("WHERE %s = %s", os.Getenv("MYSQL_ROOMS_TABLE_ID"), aID)
+	tWhere := fmt.Sprintf("WHERE %s = ?", os.Getenv("MYSQL_ROOMS_TABLE_ID"))
 	tQuery := fmt.Sprintf("SELECT * FROM %s %s", os.Getenv("MYSQL_GEST_USERS_TABLE"), tWhere)
 
-	tRows, tError := aDb.Query(tQuery)
+	tRows, tError := aDb.Query(tQuery, aID)
 	if tError != nil {
 		return nil, http.StatusInternalServerError, tError
 	}
