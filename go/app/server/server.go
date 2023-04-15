@@ -71,7 +71,7 @@ func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest 
 
 	aResponseWriter.WriteHeader(http.StatusCreated)
 	aResponseWriter.Header().Set("Content-Type", "application/json")
-	if _, tError := aResponseWriter.Write([]byte(fmt.Sprintf("http://localhost:8123/mandatory-declaration-of-intent/api/v1/rooms/%s", tRoom.RoomID))); tError != nil {
+	if _, tError := aResponseWriter.Write([]byte(tRoom.RoomID)); tError != nil {
 		log.Println(tError)
 		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
 		return

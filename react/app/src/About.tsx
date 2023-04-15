@@ -9,6 +9,7 @@ function About() {
     console.log(error);
   }).finally(()=> {
   });
+  
   return (
     <>
       <Link to="/">Home</Link>

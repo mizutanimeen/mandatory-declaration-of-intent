@@ -21,3 +21,5 @@
 https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
 
 部屋ごとに識別子を作って、ゲストユーザーに送ってクッキーに保存
+
+react 側で get room すると cookie 名とかも手に入っちゃうから ID、名前、説明のみ取得できる API にする。
