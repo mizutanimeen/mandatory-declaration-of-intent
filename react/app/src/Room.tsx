@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import { Link ,useParams } from "react-router-dom";
 import axios from 'axios';
 
@@ -13,7 +13,11 @@ function Room() {
         description: string;
     };
 
-    axios.get('http://localhost:8123/mandatory-declaration-of-intent/api/v1/rooms/'+id).then((response: any)=>{
+    const getUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") +'/rooms/'+id
+
+    console.log(getUrl);
+
+    axios.get(getUrl).then((response: any)=>{
         setRoom({id: response.data.roomid, name: response.data.name, description: response.data.description});
     });
 

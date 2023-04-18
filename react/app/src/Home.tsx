@@ -15,13 +15,14 @@ function Home() {
     setRoomDescription(e.target.value);
   }
 
+  const getUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") +'/rooms'
   const createRoom = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (roomName == '' || roomDescription == '') {
       return;
     }
 
-    axios.post('http://localhost:8123/mandatory-declaration-of-intent/api/v1/rooms', {
+    axios.post(getUrl, {
       Name: roomName,
       Description: roomDescription
     })
