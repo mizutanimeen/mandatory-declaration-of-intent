@@ -25,3 +25,5 @@ https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
 react 側で get room すると cookie 名とかも手に入っちゃうから ID、名前、説明のみ取得できる API にする。
 
 baseURL とか宣言しておく
+
+function の中にただ const で処理をかくだけだと永遠に動作してるかも？console log はそうだった

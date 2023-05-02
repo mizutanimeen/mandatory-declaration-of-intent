@@ -43,7 +43,6 @@ function Home() {
       <h2>{roomName}</h2>
       <h2>{roomDescription}</h2>
       <br></br>
-      <Link to="/about">About</Link>
     </>
   );
 }

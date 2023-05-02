@@ -47,9 +47,9 @@ func main() {
 	tRouter.Use(cors.Handler(cors.Options{
 		AllowedOrigins:   []string{os.Getenv("REACT_URL")},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
+		AllowedHeaders:   []string{"Origin", "X-Requested-With", "Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"ExposedHeaders", "Link"},
+		AllowCredentials: true,
 		MaxAge:           300,
 	}))
 	tRouter.Use(middleware.Logger)
