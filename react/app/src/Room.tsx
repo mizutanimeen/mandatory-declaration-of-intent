@@ -1,13 +1,12 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
-import { log } from "console";
 
 export const Room: React.FC = () => {
     const [room, setRoom] = React.useState({} as Room);
     const { id } = useParams();
-    const refGestUserName = useRef<HTMLInputElement>(null);
-    const refGestUserDescription = useRef<HTMLTextAreaElement>(null);
+    const [gestUserName, setGestUserName] = useState("");
+    const [gestUserDescription, setGestUserDescription] = useState("");
 
     type Room = {
         id: string;
@@ -22,20 +21,31 @@ export const Room: React.FC = () => {
         });
     }, []);
 
-    const createGestUser = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const changeUserName = (e: { preventDefault: () => void; target: { value: React.SetStateAction<string>; }; }) => {
+        e.preventDefault();
+        setGestUserName(e.target.value);
+    }
+    const changeUserDescription = (e: { preventDefault: () => void; target: { value: React.SetStateAction<string>; }; }) => {
+        e.preventDefault();
+        setGestUserDescription(e.target.value);
+    }
+
+    const createGestUser = (e: { preventDefault: () => void; }) => {
         e.preventDefault()
 
-        if (refGestUserName.current?.value == '' || refGestUserDescription.current?.value == '') {
+        if (gestUserName == '' || gestUserDescription == '') {
             return;
         }
         const createGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/members/gest'
         axios.post(createGestUserUrl, {
             Roomid: id,
-            Name: refGestUserName.current?.value,
-            Description: refGestUserDescription.current?.value
+            Name: gestUserName,
+            Description: gestUserDescription
         }, { withCredentials: true })
             .then((response) => {
                 console.log(response);
+                setGestUserName("");
+                setGestUserDescription("");
             });
     };
 
@@ -55,9 +65,9 @@ export const Room: React.FC = () => {
             <br></br>
 
             <div>意見追加</div>
-            <input type="text" ref={refGestUserName} placeholder="名前" />
-            <textarea ref={refGestUserDescription} placeholder="意見" />
-            <button onClick={(e) => createGestUser(e)}>作成</button>
+            <input type="text" value={gestUserName} onChange={changeUserName} placeholder="名前" />
+            <textarea value={gestUserDescription} onChange={changeUserDescription} placeholder="意見" />
+            <button onClick={createGestUser}>作成</button>
 
             <br></br>
 
