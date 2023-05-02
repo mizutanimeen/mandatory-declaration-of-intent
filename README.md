@@ -27,3 +27,5 @@ react 側で get room すると cookie 名とかも手に入っちゃうから I
 baseURL とか宣言しておく
 
 function の中にただ const で処理をかくだけだと永遠に動作してるかも？console log はそうだった
+
+room.tsxのゲストユーザー一覧取得から、クッキーはブラウザにあるからそれを渡すとこからかな
