@@ -20,12 +20,6 @@
 
 https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
 
-部屋ごとに識別子を作って、ゲストユーザーに送ってクッキーに保存
-
 react 側で get room すると cookie 名とかも手に入っちゃうから ID、名前、説明のみ取得できる API にする。
 
-baseURL とか宣言しておく
-
-function の中にただ const で処理をかくだけだと永遠に動作してるかも？console log はそうだった
-
-room.tsxのゲストユーザー一覧取得から、クッキーはブラウザにあるからそれを渡すとこからかな
+gest user の意見一覧作る

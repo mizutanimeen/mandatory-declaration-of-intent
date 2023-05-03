@@ -183,10 +183,10 @@ func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRe
 	//tGestUser.RoomIDからRoomID.CookieName,RoomID.CookieValueを取得
 	tRoom, tStatus, tError := db.GetRoomByID(tGestUser.RoomID, aServer.Db)
 	tCookie := &http.Cookie{
-		Name:     tRoom.CookieName,
-		Value:    tRoom.CookieValue,
-		Path:     "/",
-		HttpOnly: true,
+		Name:  tRoom.CookieName,
+		Value: tRoom.CookieValue,
+		Path:  "/",
+		// HttpOnly: true,
 	}
 	http.SetCookie(aResponseWriter, tCookie)
 	aResponseWriter.WriteHeader(http.StatusCreated)
