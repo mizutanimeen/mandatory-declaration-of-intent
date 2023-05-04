@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
+import { GestUser } from "./models";
 
 export const Room: React.FC = () => {
     const [room, setRoom] = React.useState({} as Room);
     const { id } = useParams();
     const [gestUserName, setGestUserName] = useState("");
     const [gestUserText, setGestUserText] = useState("");
+    const [gestUsers, setGestUsers] = useState([] as GestUser[]);
 
     type Room = {
         id: string;
@@ -43,7 +45,6 @@ export const Room: React.FC = () => {
             Text: gestUserText
         }, { withCredentials: true })
             .then((response) => {
-                console.log(response);
                 setGestUserName("");
                 setGestUserText("");
             });
@@ -53,9 +54,17 @@ export const Room: React.FC = () => {
     const getAllGestUser = () => {
         const getAllGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/' + (id ?? "") + '/members/gest'
         axios.get(getAllGestUserUrl, { withCredentials: true }).then((response: any) => {
-            console.log(response);
+            if (response.data.length <= 0) {
+                return
+            }
+            const data: GestUser[] = JSON.parse(response.request.response);
+            setGestUsers(data);
         });
     }
+
+    useEffect(() => {
+        console.log(gestUsers[0]?.name)
+    }, [gestUsers]);
 
     return (
         <>
@@ -74,7 +83,20 @@ export const Room: React.FC = () => {
             <button onClick={getAllGestUser}>ゲストユーザー一覧</button>
 
             <br></br>
+            <GestUsersView gestUsers={gestUsers} />
+
+            <br></br>
             <Link to="/">Homeへ戻る</Link>
         </>
     );
 }
+
+const GestUsersView: React.FC<{ gestUsers: GestUser[] | undefined }> = ({ gestUsers }) => {
+    return (
+        <>
+            {gestUsers?.map((gestUser) =>
+                <div key={gestUser.gest_userid}>{gestUser.name}</div>
+            )}
+        </>
+    );
+};
