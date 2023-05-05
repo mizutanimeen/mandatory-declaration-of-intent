@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
-import { GestUser } from "./models";
+import { GestUser } from "./components/models";
 import { Text } from '@mantine/core';
 import { DataTable } from 'mantine-datatable';
 
