@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 import { GestUser } from "./models";
+import { Text } from '@mantine/core';
+import { DataTable } from 'mantine-datatable';
 
 export const Room: React.FC = () => {
     const [room, setRoom] = React.useState({} as Room);
@@ -38,6 +40,15 @@ export const Room: React.FC = () => {
         if (gestUserName == '' || gestUserText == '') {
             return;
         }
+        if (gestUserName.length > 32) {
+            alert(`名前は32文字以内で入力してください`)
+            return;
+        }
+        if (gestUserText.length > 2048) {
+            alert(`意見は2048文字以内で入力してください`)
+            return;
+        }
+
         const createGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/members/gest'
         axios.post(createGestUserUrl, {
             Roomid: id,
@@ -50,7 +61,6 @@ export const Room: React.FC = () => {
             });
     };
 
-    //ココでクッキー渡す必要ありそう
     const getAllGestUser = () => {
         const getAllGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/' + (id ?? "") + '/members/gest'
         axios.get(getAllGestUserUrl, { withCredentials: true }).then((response: any) => {
@@ -92,11 +102,39 @@ export const Room: React.FC = () => {
 }
 
 const GestUsersView: React.FC<{ gestUsers: GestUser[] | undefined }> = ({ gestUsers }) => {
+
+    const records = gestUsers?.map((gestUser) => {
+        return {
+            name: gestUser.name,
+            text: gestUser.text,
+        }
+    });
+
     return (
-        <>
-            {gestUsers?.map((gestUser) =>
-                <div key={gestUser.gest_userid}>{gestUser.name}</div>
-            )}
-        </>
+        <DataTable
+            withBorder
+            borderRadius="sm"
+            withColumnBorders
+            striped
+            highlightOnHover
+            columns={[
+                {
+                    accessor: 'name',
+                    title: '名前',
+                    width: 100,
+                    ellipsis: false,
+                },
+                {
+                    accessor: 'text',
+                    title: '説明',
+                    width: 1000,
+                    ellipsis: false,
+                },
+            ]}
+            records={records}
+            onRowClick={({ name, text }) =>
+                alert(`${name} \n ${text}`)
+            }
+        />
     );
 };
