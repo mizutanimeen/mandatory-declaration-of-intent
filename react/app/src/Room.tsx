@@ -23,6 +23,7 @@ export const Room: React.FC = () => {
         axios.get(getRoomUrl).then((response: any) => {
             setRoom({ id: response.data.roomid, name: response.data.name, description: response.data.description });
         });
+        getAllGestUser();
     }, []);
 
     const changeUserName = (e: { preventDefault: () => void; target: { value: React.SetStateAction<string>; }; }) => {
@@ -58,6 +59,7 @@ export const Room: React.FC = () => {
             .then((response) => {
                 setGestUserName("");
                 setGestUserText("");
+                getAllGestUser();
             });
     };
 
@@ -71,10 +73,6 @@ export const Room: React.FC = () => {
             setGestUsers(data);
         });
     }
-
-    useEffect(() => {
-        console.log(gestUsers[0]?.name)
-    }, [gestUsers]);
 
     return (
         <>
@@ -90,12 +88,8 @@ export const Room: React.FC = () => {
 
             <br></br>
 
-            <button onClick={getAllGestUser}>ゲストユーザー一覧</button>
-
-            <br></br>
             <GestUsersView gestUsers={gestUsers} />
 
-            <br></br>
             <Link to="/">Homeへ戻る</Link>
         </>
     );
@@ -110,31 +104,40 @@ const GestUsersView: React.FC<{ gestUsers: GestUser[] | undefined }> = ({ gestUs
         }
     });
 
+    if ((gestUsers?.length ?? 0) <= 0) {
+        return (
+            <></>
+        )
+    }
+
     return (
-        <DataTable
-            withBorder
-            borderRadius="sm"
-            withColumnBorders
-            striped
-            highlightOnHover
-            columns={[
-                {
-                    accessor: 'name',
-                    title: '名前',
-                    width: 100,
-                    ellipsis: false,
-                },
-                {
-                    accessor: 'text',
-                    title: '説明',
-                    width: 1000,
-                    ellipsis: false,
-                },
-            ]}
-            records={records}
-            onRowClick={({ name, text }) =>
-                alert(`${name} \n ${text}`)
-            }
-        />
+        <>
+            <DataTable
+                withBorder
+                borderRadius="sm"
+                withColumnBorders
+                striped
+                highlightOnHover
+                columns={[
+                    {
+                        accessor: 'name',
+                        title: '名前',
+                        width: 100,
+                        ellipsis: false,
+                    },
+                    {
+                        accessor: 'text',
+                        title: '説明',
+                        width: 1000,
+                        ellipsis: false,
+                    },
+                ]}
+                records={records}
+                onRowClick={({ name, text }) =>
+                    alert(`${name} \n ${text}`)
+                }
+            />
+            <br></br>
+        </>
     );
 };

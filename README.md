@@ -22,4 +22,5 @@ https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
 
 react 側で get room すると cookie 名とかも手に入っちゃうから ID、名前、説明のみ取得できる API にする。
 
-gest user の意見一覧作る
+HttpOnly: true,を付けても動作するか
+
