@@ -4,6 +4,7 @@ import axios from 'axios';
 import { GestUser } from "./components/models";
 import { DataTable } from 'mantine-datatable';
 import { getRoomURL, postGestUserURL, getAllGestUserURL } from "./components/baseURL"
+import { TextInput, Textarea, Button } from '@mantine/core';
 
 export const Room: React.FC = () => {
     const [room, setRoom] = React.useState({} as Room);
@@ -26,18 +27,7 @@ export const Room: React.FC = () => {
         getAllGestUser();
     }, []);
 
-    const changeUserName = (e: { preventDefault: () => void; target: { value: React.SetStateAction<string>; }; }) => {
-        e.preventDefault();
-        setGestUserName(e.target.value);
-    }
-    const changeUserText = (e: { preventDefault: () => void; target: { value: React.SetStateAction<string>; }; }) => {
-        e.preventDefault();
-        setGestUserText(e.target.value);
-    }
-
-    const createGestUser = (e: { preventDefault: () => void; }) => {
-        e.preventDefault()
-
+    const createGestUser = () => {
         if (gestUserName == '' || gestUserText == '') {
             return;
         }
@@ -82,9 +72,21 @@ export const Room: React.FC = () => {
             <br></br>
 
             <div>意見追加</div>
-            <input type="text" value={gestUserName} onChange={changeUserName} placeholder="名前" />
-            <textarea value={gestUserText} onChange={changeUserText} placeholder="意見" />
-            <button onClick={createGestUser}>作成</button>
+            <TextInput
+                placeholder="ゲストユーザー名"
+                label="ゲストユーザー名"
+                withAsterisk
+                value={gestUserName}
+                onChange={(e) => setGestUserName(e.target.value)}
+            />
+            <Textarea
+                placeholder="意見"
+                label="意見"
+                withAsterisk
+                value={gestUserText}
+                onChange={(e) => setGestUserText(e.target.value)}
+            />
+            <Button onClick={createGestUser}>意見を投稿</Button >
 
             <br></br>
 

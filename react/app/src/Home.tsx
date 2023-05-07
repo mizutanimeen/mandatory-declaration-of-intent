@@ -2,24 +2,25 @@ import React from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { postRoomURL } from "./components/baseURL"
+import './static/css/Home.css';
+import { TextInput, Textarea, Button } from '@mantine/core';
 
 function Home() {
   const [roomName, setRoomName] = React.useState('');
   const [roomDescription, setRoomDescription] = React.useState('');
   const navigate = useNavigate();
 
-  const roomNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-    setRoomName(e.target.value);
-  }
-
-  const roomDescriptionChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-    setRoomDescription(e.target.value);
-  }
-
-  const createRoom = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const createRoom = () => {
     if (roomName == '' || roomDescription == '') {
       return;
+    }
+    if (roomName.length > 32) {
+      alert(`名前は32文字以内で入力してください`)
+      return
+    }
+    if (roomDescription.length > 255) {
+      alert(`説明は255文字以内で入力してください`)
+      return
     }
 
     axios.post(postRoomURL(), {
@@ -35,11 +36,22 @@ function Home() {
   return (
     <>
       <h1>部屋作成</h1>
-      <form onSubmit={(e) => { createRoom(e) }}>
-        <input type="text" onChange={(e) => { roomNameChange(e) }} placeholder="名前" />
-        <textarea onChange={(e) => { roomDescriptionChange(e) }} placeholder="部屋の詳細" />
-        <input type="submit" value="作成" />
-      </form>
+      <TextInput
+        placeholder="部屋の名前"
+        label="部屋の名前"
+        withAsterisk
+        value={roomName}
+        onChange={(e) => setRoomName(e.target.value)}
+      />
+      <Textarea
+        placeholder="部屋の説明"
+        label="部屋の説明"
+        withAsterisk
+        value={roomDescription}
+        onChange={(e) => setRoomDescription(e.target.value)}
+      />
+      <Button onClick={createRoom}>部屋を作成</Button >
+
     </>
   );
 }
