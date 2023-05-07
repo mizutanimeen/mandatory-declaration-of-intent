@@ -2,8 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 import { GestUser } from "./components/models";
-import { Text } from '@mantine/core';
 import { DataTable } from 'mantine-datatable';
+import { getRoomURL, postGestUserURL, getAllGestUserURL } from "./components/baseURL"
 
 export const Room: React.FC = () => {
     const [room, setRoom] = React.useState({} as Room);
@@ -19,8 +19,8 @@ export const Room: React.FC = () => {
     };
 
     useEffect(() => {
-        const getRoomUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/' + id
-        axios.get(getRoomUrl).then((response: any) => {
+        if (!id) { return }
+        axios.get(getRoomURL(id)).then((response: any) => {
             setRoom({ id: response.data.roomid, name: response.data.name, description: response.data.description });
         });
         getAllGestUser();
@@ -50,8 +50,7 @@ export const Room: React.FC = () => {
             return;
         }
 
-        const createGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/members/gest'
-        axios.post(createGestUserUrl, {
+        axios.post(postGestUserURL(), {
             Roomid: id,
             Name: gestUserName,
             Text: gestUserText
@@ -64,8 +63,9 @@ export const Room: React.FC = () => {
     };
 
     const getAllGestUser = () => {
-        const getAllGestUserUrl = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms/' + (id ?? "") + '/members/gest'
-        axios.get(getAllGestUserUrl, { withCredentials: true }).then((response: any) => {
+        if (!id) { return }
+
+        axios.get(getAllGestUserURL(id), { withCredentials: true }).then((response: any) => {
             if (response.data.length <= 0) {
                 return
             }

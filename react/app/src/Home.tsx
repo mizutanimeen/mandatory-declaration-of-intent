@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { postRoomURL } from "./components/baseURL"
 
 function Home() {
   const [roomName, setRoomName] = React.useState('');
   const [roomDescription, setRoomDescription] = React.useState('');
   const navigate = useNavigate();
-  const createRoomURL = (process.env.REACT_APP_GO_URL ?? "") + (process.env.REACT_APP_GO_PATH ?? "") + '/rooms'
 
   const roomNameChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
     setRoomName(e.target.value);
@@ -22,7 +22,7 @@ function Home() {
       return;
     }
 
-    axios.post(createRoomURL, {
+    axios.post(postRoomURL(), {
       Name: roomName,
       Description: roomDescription
     })
