@@ -14,3 +14,9 @@ type Room struct {
 	CreateAt    time.Time `json:"create_at"`
 	UpdateAt    time.Time `json:"update_at"`
 }
+
+type OutPutRoom struct {
+	RoomID      string `json:"roomid"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}

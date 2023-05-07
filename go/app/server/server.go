@@ -12,6 +12,7 @@ import (
 
 	"github.com/mizutanimeen/mandatory-declaration-of-intent/controllers"
 	"github.com/mizutanimeen/mandatory-declaration-of-intent/db"
+	"github.com/mizutanimeen/mandatory-declaration-of-intent/models"
 )
 
 type Server struct {
@@ -34,7 +35,13 @@ func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest
 		return
 	}
 
-	tRoomByte, tError := json.Marshal(tRoom)
+	tOutPutRoom := models.OutPutRoom{
+		RoomID:      tRoom.RoomID,
+		Name:        tRoom.Name,
+		Description: tRoom.Description,
+	}
+
+	tRoomByte, tError := json.Marshal(tOutPutRoom)
 	if tError != nil {
 		log.Println(tError)
 		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)

@@ -93,7 +93,7 @@ export const Room: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <Button onClick={checkPassword}>部屋を作成</Button >
+                <Button onClick={checkPassword}>送信</Button >
             </>
         );
     }
