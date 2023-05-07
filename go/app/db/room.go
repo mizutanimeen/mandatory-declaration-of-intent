@@ -16,16 +16,16 @@ func GetRoomByID(aID string, aDb *sql.DB) (*models.Room, int, error) {
 	tQuery := fmt.Sprintf("SELECT * FROM %s %s", os.Getenv("MYSQL_ROOMS_TABLE"), tWhere)
 
 	tRoom := models.Room{}
-	if tError := aDb.QueryRow(tQuery, aID).Scan(&tRoom.RoomID, &tRoom.Name, &tRoom.Description, &tRoom.CookieName, &tRoom.CookieValue, &tRoom.CreateAt, &tRoom.UpdateAt); tError != nil {
+	if tError := aDb.QueryRow(tQuery, aID).Scan(&tRoom.RoomID, &tRoom.Name, &tRoom.Description, &tRoom.Password, &tRoom.CookieName, &tRoom.CookieValue, &tRoom.CreateAt, &tRoom.UpdateAt); tError != nil {
 		return nil, http.StatusInternalServerError, tError
 	}
 	return &tRoom, 0, nil
 }
 
 func CreateRoom(aRoom *models.Room, aDb *sql.DB) (int, error) {
-	tColumns := fmt.Sprintf("(%s,%s,%s,%s,%s)",
-		os.Getenv("MYSQL_ROOMS_TABLE_ID"), os.Getenv("MYSQL_ROOMS_TABLE_NAME"), os.Getenv("MYSQL_ROOMS_TABLE_DESCRIPTION"), os.Getenv("MYSQL_ROOMS_TABLE_COOKIE_NAME"), os.Getenv("MYSQL_ROOMS_TABLE_COOKIE_VALUE"))
-	tQuery := fmt.Sprintf("INSERT INTO %s %s VALUES (?,?,?,?,?)",
+	tColumns := fmt.Sprintf("(%s,%s,%s,%s,%s,%s)",
+		os.Getenv("MYSQL_ROOMS_TABLE_ID"), os.Getenv("MYSQL_ROOMS_TABLE_NAME"), os.Getenv("MYSQL_ROOMS_TABLE_DESCRIPTION"), os.Getenv("MYSQL_ROOMS_TABLE_PASSWORD"), os.Getenv("MYSQL_ROOMS_TABLE_COOKIE_NAME"), os.Getenv("MYSQL_ROOMS_TABLE_COOKIE_VALUE"))
+	tQuery := fmt.Sprintf("INSERT INTO %s %s VALUES (?,?,?,?,?,?)",
 		os.Getenv("MYSQL_ROOMS_TABLE"), tColumns)
 
 	tStmt, tError := aDb.Prepare(tQuery)
@@ -45,7 +45,7 @@ func CreateRoom(aRoom *models.Room, aDb *sql.DB) (int, error) {
 		return tStatus, tError
 	}
 
-	if _, tError := tStmt.Exec(aRoom.RoomID, aRoom.Name, aRoom.Description, tCookieName, tCookieValue); tError != nil {
+	if _, tError := tStmt.Exec(aRoom.RoomID, aRoom.Name, aRoom.Description, aRoom.Password, tCookieName, tCookieValue); tError != nil {
 		return http.StatusInternalServerError, tError
 	}
 	return 0, nil

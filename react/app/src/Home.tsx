@@ -24,10 +24,18 @@ export const Home: React.FC = () => {
       alert(`説明は255文字以内で入力してください`)
       return
     }
+    if (onPassword && password == '') {
+      alert(`パスワードを入力してください`)
+      return
+    }
+    if (!onPassword) {
+      setPassword('')
+    }
 
     axios.post(postRoomURL(), {
       Name: roomName,
-      Description: roomDescription
+      Description: roomDescription,
+      Password: password,
     })
       .then((response) => {
         navigate("/rooms/" + response.data);
