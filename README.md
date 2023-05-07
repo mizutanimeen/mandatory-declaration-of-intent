@@ -21,3 +21,5 @@
 https://app.diagrams.net/#G1wSNS1Fk22s8tYFcnFMgeRdeICfvrPR0h
 
 デザイン整えたい
+
+dockerをもう少し整えたい

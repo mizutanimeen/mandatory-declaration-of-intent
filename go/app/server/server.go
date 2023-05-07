@@ -49,11 +49,9 @@ func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest
 		return
 	}
 
-	aResponseWriter.Header().Set("Content-Type", "application/json")
-	aResponseWriter.WriteHeader(200)
-	if _, tError := aResponseWriter.Write(tRoomByte); tError != nil {
+	if tStatus, tError := responseWrite(aResponseWriter, http.StatusOK, tRoomByte); tError != nil {
 		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
 		return
 	}
 
@@ -77,11 +75,9 @@ func (aServer *Server) CreateRoom(aResponseWriter http.ResponseWriter, aRequest 
 		return
 	}
 
-	aResponseWriter.WriteHeader(http.StatusCreated)
-	aResponseWriter.Header().Set("Content-Type", "application/json")
-	if _, tError := aResponseWriter.Write([]byte(tRoom.RoomID)); tError != nil {
+	if tStatus, tError := responseWrite(aResponseWriter, http.StatusCreated, []byte(tRoom.RoomID)); tError != nil {
 		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
 		return
 	}
 	return
@@ -100,10 +96,9 @@ func (aServer *Server) GetUserByID(aResponseWriter http.ResponseWriter, aRequest
 		return
 	}
 
-	aResponseWriter.Header().Set("Content-Type", "application/json")
-	aResponseWriter.WriteHeader(200)
-	if _, tError := aResponseWriter.Write(tUserByte); tError != nil {
-		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+	if tStatus, tError := responseWrite(aResponseWriter, http.StatusOK, tUserByte); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
 		return
 	}
 
@@ -160,11 +155,9 @@ func (aServer *Server) GetAllGestMembers(aResponseWriter http.ResponseWriter, aR
 		return
 	}
 
-	aResponseWriter.Header().Set("Content-Type", "application/json")
-	aResponseWriter.WriteHeader(200)
-	if _, tError := aResponseWriter.Write(tUserByte); tError != nil {
+	if tStatus, tError := responseWrite(aResponseWriter, http.StatusOK, tUserByte); tError != nil {
 		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
 		return
 	}
 
@@ -188,7 +181,6 @@ func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRe
 		return
 	}
 
-	//tGestUser.RoomIDからRoomID.CookieName,RoomID.CookieValueを取得
 	tRoom, tStatus, tError := db.GetRoomByID(tGestUser.RoomID, aServer.Db)
 	tCookie := &http.Cookie{
 		Name:     tRoom.CookieName,
@@ -198,13 +190,12 @@ func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRe
 	}
 	http.SetCookie(aResponseWriter, tCookie)
 	aResponseWriter.WriteHeader(http.StatusCreated)
+
 	return
 }
 func (aServer *Server) PasswordCheck(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
 	tID := chi.URLParam(aRequest, "ID")
-
-	tQuery := aRequest.URL.Query()
-	tPassword := tQuery.Get("Password")
+	tPassword := aRequest.URL.Query().Get("Password")
 
 	tBool, tStatus, tError := db.PasswordCheck(tID, tPassword, aServer.Db)
 	if tError != nil {
@@ -225,11 +216,11 @@ func (aServer *Server) PasswordCheck(aResponseWriter http.ResponseWriter, aReque
 		return
 	}
 
-	aResponseWriter.Header().Set("Content-Type", "application/json")
-	aResponseWriter.WriteHeader(200)
-	if _, tError := aResponseWriter.Write(tBoolByte); tError != nil {
+	if tStatus, tError := responseWrite(aResponseWriter, http.StatusOK, tBoolByte); tError != nil {
 		log.Println(tError)
-		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
 		return
 	}
+
+	return
 }

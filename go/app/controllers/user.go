@@ -25,7 +25,6 @@ func ParseRequestUser(aRequest *http.Request) (*models.User, int, error) {
 	return tUser, 0, nil
 }
 
-// bodyがjsonのrequestからstruct userを作る
 func jsonToUser(aRequest *http.Request) (*models.User, int, error) {
 	tBody := make([]byte, aRequest.ContentLength)
 	aRequest.Body.Read(tBody)
@@ -55,7 +54,6 @@ func ParseRequestGestUser(aRequest *http.Request) (*models.GestUser, int, error)
 	return tGestUser, 0, nil
 }
 
-// bodyがjsonのrequestからstruct userを作る
 func jsonToGestUser(aRequest *http.Request) (*models.GestUser, int, error) {
 	tBody := make([]byte, aRequest.ContentLength)
 	aRequest.Body.Read(tBody)

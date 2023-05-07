@@ -4,7 +4,7 @@ services:
     build: ./go
     container_name: mandatory-declaration-of-intent-go
     restart: always
-    env_file: 
+    env_file:
       - dev.env
     tty: true
     volumes:
@@ -17,20 +17,19 @@ services:
     build: ./react
     container_name: mandatory-declaration-of-intent-react
     tty: true
-    env_file: 
+    env_file:
       - dev.env
     volumes:
-      - ./react/app:/react/app
+      - ./react/app:/react/app:rw
     ports:
       - 3000:3000
   db:
     build: ./db
     container_name: mandatory-declaration-of-intent-db
     tty: true
-    env_file: 
+    env_file:
       - dev.env
     volumes:
-      - ./db/data:/var/lib/mysql
+      - ./db/data:/var/lib/mysql:rw
     ports:
       - 3306:3306
-

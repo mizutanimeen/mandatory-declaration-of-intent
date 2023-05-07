@@ -54,14 +54,14 @@ func main() {
 	}))
 	tRouter.Use(middleware.Logger)
 	tRouter.Route(os.Getenv("REACT_APP_GO_PATH"), func(tRouter chi.Router) {
-		tRouter.Get("/users/{ID}", tServer.GetUserByID)
-		tRouter.Post("/users", tServer.CreateUser)
-		tRouter.Get("/rooms/{ID}", tServer.GetRoomByID)
-		tRouter.Post("/rooms", tServer.CreateRoom)
-		tRouter.Get("/rooms/{ID}/members/gest", tServer.GetAllGestMembers)
-		tRouter.Get("/rooms/{ID}/check", tServer.PasswordCheck)
+		tRouter.Get("/users/{ID}", tServer.GetUserByID)                    // 永久ユーザーの情報をIDから取得
+		tRouter.Post("/users", tServer.CreateUser)                         // 永久ユーザー作成
+		tRouter.Get("/rooms/{ID}", tServer.GetRoomByID)                    // IDから部屋の情報を取得
+		tRouter.Post("/rooms", tServer.CreateRoom)                         // 部屋作成
+		tRouter.Get("/rooms/{ID}/members/gest", tServer.GetAllGestMembers) // IDから部屋のゲストメンバーを全て取得
+		tRouter.Post("/rooms/members/gest", tServer.CreateGestMember)      // 送信された部屋IDに送信された情報のゲストユーザーを作成 // idをURLに含めたい
+		tRouter.Get("/rooms/{ID}/check", tServer.PasswordCheck)            // 送信されたパスワードが正しいかチェック
 		// tRouter.Post("/rooms/members/user", tServer.JoinUserMember)
-		tRouter.Post("/rooms/members/gest", tServer.CreateGestMember)
 	})
 
 	log.Println("--------------Server Start--------------")
