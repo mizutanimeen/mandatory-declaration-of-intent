@@ -19,13 +19,16 @@ export const Room: React.FC = () => {
         id: string;
         name: string;
         description: string;
+        existPassword: boolean;
     };
 
     useEffect(() => {
         if (!id) { return }
         axios.get(getRoomURL(id)).then((response: any) => {
-            setRoom({ id: response.data.roomid, name: response.data.name, description: response.data.description });
-            checkPassword();
+            setRoom({ id: response.data.roomid, name: response.data.name, description: response.data.description, existPassword: response.data.exist_password });
+            if (!response.data.exist_password) {
+                setStart(true);
+            }
         });
         getAllGestUser();
     }, []);

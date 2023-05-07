@@ -36,9 +36,10 @@ func (aServer *Server) GetRoomByID(aResponseWriter http.ResponseWriter, aRequest
 	}
 
 	tOutPutRoom := models.OutPutRoom{
-		RoomID:      tRoom.RoomID,
-		Name:        tRoom.Name,
-		Description: tRoom.Description,
+		RoomID:        tRoom.RoomID,
+		Name:          tRoom.Name,
+		Description:   tRoom.Description,
+		ExistPassword: tRoom.Password != "",
 	}
 
 	tRoomByte, tError := json.Marshal(tOutPutRoom)

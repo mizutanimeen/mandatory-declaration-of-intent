@@ -16,7 +16,8 @@ type Room struct {
 }
 
 type OutPutRoom struct {
-	RoomID      string `json:"roomid"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	RoomID        string `json:"roomid"`
+	Name          string `json:"name"`
+	Description   string `json:"description"`
+	ExistPassword bool   `json:"exist_password"`
 }
