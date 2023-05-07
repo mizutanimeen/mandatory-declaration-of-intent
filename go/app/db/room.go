@@ -73,3 +73,15 @@ func createCookie(aRoom *models.Room) (string, string, int, error) {
 
 	return tCookieName, tCookieValue, 0, nil
 }
+
+func PasswordCheck(aID string, aPassword string, aDb *sql.DB) (bool, int, error) {
+	tRoom, tStatus, tError := GetRoomByID(aID, aDb)
+	if tError != nil {
+		return false, tStatus, tError
+	}
+
+	if tRoom.Password == aPassword {
+		return true, 0, nil
+	}
+	return false, http.StatusUnauthorized, nil
+}

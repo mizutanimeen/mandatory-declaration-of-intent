@@ -192,3 +192,36 @@ func (aServer *Server) CreateGestMember(aResponseWriter http.ResponseWriter, aRe
 	aResponseWriter.WriteHeader(http.StatusCreated)
 	return
 }
+func (aServer *Server) PasswordCheck(aResponseWriter http.ResponseWriter, aRequest *http.Request) {
+	tID := chi.URLParam(aRequest, "ID")
+
+	tQuery := aRequest.URL.Query()
+	tPassword := tQuery.Get("Password")
+
+	tBool, tStatus, tError := db.PasswordCheck(tID, tPassword, aServer.Db)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), tStatus)
+		return
+	}
+
+	type passwordOk struct {
+		PasswordOk bool `json:"password_ok"`
+	}
+	tPasswordOk := passwordOk{tBool}
+
+	tBoolByte, tError := json.Marshal(tPasswordOk)
+	if tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	aResponseWriter.Header().Set("Content-Type", "application/json")
+	aResponseWriter.WriteHeader(200)
+	if _, tError := aResponseWriter.Write(tBoolByte); tError != nil {
+		log.Println(tError)
+		http.Error(aResponseWriter, tError.Error(), http.StatusInternalServerError)
+		return
+	}
+}

@@ -3,10 +3,12 @@ import { Link, useParams } from "react-router-dom";
 import axios from 'axios';
 import { GestUser } from "./components/models";
 import { DataTable } from 'mantine-datatable';
-import { getRoomURL, postGestUserURL, getAllGestUserURL } from "./components/baseURL"
+import { getRoomURL, postGestUserURL, getAllGestUserURL, getRoomPasswordCheckURL } from "./components/baseURL"
 import { TextInput, Textarea, Button } from '@mantine/core';
 
 export const Room: React.FC = () => {
+    const [start, setStart] = useState(false);
+    const [password, setPassword] = React.useState('');
     const [room, setRoom] = React.useState({} as Room);
     const { id } = useParams();
     const [gestUserName, setGestUserName] = useState("");
@@ -23,6 +25,7 @@ export const Room: React.FC = () => {
         if (!id) { return }
         axios.get(getRoomURL(id)).then((response: any) => {
             setRoom({ id: response.data.roomid, name: response.data.name, description: response.data.description });
+            checkPassword();
         });
         getAllGestUser();
     }, []);
@@ -62,6 +65,37 @@ export const Room: React.FC = () => {
             const data: GestUser[] = JSON.parse(response.request.response);
             setGestUsers(data);
         });
+    }
+
+    const checkPassword = () => {
+        if (!id) { return }
+
+        axios.get(getRoomPasswordCheckURL(id), {
+            params: {
+                Password: password
+            }
+        }).then((response: any) => {
+            if (response.data.password_ok != true) {
+                alert(`パスワードが違います`)
+                return
+            }
+            setStart(true);
+        });
+    }
+
+    if (!start) {
+        return (
+            <>
+                <h2>パスワードを入力してください</h2>
+                <TextInput
+                    placeholder="パスワード"
+                    label="パスワード"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
+                <Button onClick={checkPassword}>部屋を作成</Button >
+            </>
+        );
     }
 
     return (

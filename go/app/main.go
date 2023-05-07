@@ -59,6 +59,7 @@ func main() {
 		tRouter.Get("/rooms/{ID}", tServer.GetRoomByID)
 		tRouter.Post("/rooms", tServer.CreateRoom)
 		tRouter.Get("/rooms/{ID}/members/gest", tServer.GetAllGestMembers)
+		tRouter.Get("/rooms/{ID}/check", tServer.PasswordCheck)
 		// tRouter.Post("/rooms/members/user", tServer.JoinUserMember)
 		tRouter.Post("/rooms/members/gest", tServer.CreateGestMember)
 	})
