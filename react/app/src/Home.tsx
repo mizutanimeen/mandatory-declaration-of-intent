@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { postRoomURL } from "./components/baseURL"
 import './static/css/Home.css';
-import { TextInput, Textarea, Button } from '@mantine/core';
+import { TextInput, Textarea, Button, Switch } from '@mantine/core';
 
-function Home() {
+export const Home: React.FC = () => {
   const [roomName, setRoomName] = React.useState('');
   const [roomDescription, setRoomDescription] = React.useState('');
+  const [onPassword, setOnPassword] = React.useState(false);
+  const [password, setPassword] = React.useState('');
   const navigate = useNavigate();
 
   const createRoom = () => {
@@ -50,10 +52,20 @@ function Home() {
         value={roomDescription}
         onChange={(e) => setRoomDescription(e.target.value)}
       />
+      <Switch
+        label="パスワードを設定する"
+        checked={onPassword}
+        onChange={(event) => setOnPassword(event.target.checked)}
+      />
+      <TextInput
+        disabled={!onPassword}
+        placeholder="パスワード"
+        label="パスワード"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <Button onClick={createRoom}>部屋を作成</Button >
 
     </>
   );
 }
-
-export default Home;
